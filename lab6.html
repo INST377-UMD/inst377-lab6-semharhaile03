@@ -43,7 +43,7 @@
         var marker_two = L.marker([two_lat, two_long]).addTo(map);
         var marker_three = L.marker([three_lat, three_long]).addTo(map);
         
-        function findLocality(long, lat, local) {
+        function findLocality(lat, long, local) {
             const lat_value = lat
             const long_value = long
             const local_value = local
@@ -51,10 +51,10 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                document.getElementById(local_value).innerText = data['locality'];
+                document.getElementById(local_value).innerText = data.locality;
             });
         }
-    
+        
         findLocality(one_lat, one_long, 'one_local');
         findLocality(two_lat, two_long, 'two_local');
         findLocality(three_lat, three_long, 'three_local');
