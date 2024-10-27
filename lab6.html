@@ -1,0 +1,62 @@
+<head>
+    <title>INST377 - Lab 6</title>
+    <link rel = "stylesheet" href = "mapstyle.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+</head>
+<body>
+    <h3> Map of US</h3>
+    <div id="map"></div>
+    <h3>Marker 1: Latitude: <span id = "one_lat"></span>, Longitude: <span id = "one_long"></span> </h3>
+    <p>Locality: <span id = "one_local"></span></p>
+    <h3>Marker 2: Latitude: <span id = "two_lat"></span>, Longitude: <span id = "two_long"></span></h3>
+    <p>Locality: <span id = "two_local"></span></p>
+    <h3>Marker 3: Latitude: <span id = "three_lat"></span>, Longitude: <span id = "three_long"></span></h3>
+    <p>Locality: <span id = "three_local"></span></p>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""> </script>
+    <script>
+        function getRandomInRange(from, to, fixed) {
+            return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+            };
+            document.getElementById('one_lat').innerText = getRandomInRange(30, 35, 3);
+            document.getElementById('two_lat').innerText = getRandomInRange(30, 35, 3);
+            document.getElementById('three_lat').innerText = getRandomInRange(30, 35, 3);
+            document.getElementById('one_long').innerText = getRandomInRange(-90, -100, 3);
+            document.getElementById('two_long').innerText = getRandomInRange(-90, -100, 3);
+            document.getElementById('three_long').innerText = getRandomInRange(-90, -100, 3);
+        var map = L.map('map').setView([32, -95], 5);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        var one_lat = parseFloat(document.getElementById('one_lat').innerText);
+        var one_long = parseFloat(document.getElementById('one_long').innerText);
+        var two_lat = parseFloat(document.getElementById('two_lat').innerText);
+        var two_long = parseFloat(document.getElementById('two_long').innerText);
+        var three_lat = parseFloat(document.getElementById('three_lat').innerText);
+        var three_long = parseFloat(document.getElementById('three_long').innerText);
+        var marker_one = L.marker([one_lat, one_long]).addTo(map);
+        var marker_two = L.marker([two_lat, two_long]).addTo(map);
+        var marker_three = L.marker([three_lat, three_long]).addTo(map);
+        
+        function findLocality(long, lat, local) {
+            const lat_value = lat
+            const long_value = long
+            const local_value = local
+            fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat_value}&longitude=${long_value}&localityLanguage=en`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById(local_value).innerText = data['locality'];
+            });
+        }
+    
+        findLocality(one_lat, one_long, 'one_local');
+        findLocality(two_lat, two_long, 'two_local');
+        findLocality(three_lat, three_long, 'three_local');
+    </script>
+</body>
